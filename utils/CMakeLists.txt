@@ -3,7 +3,7 @@ INCLUDE_DIRECTORIES(
 	${ROOT_INCLUDE_DIR}
 	)
 
-SET(DICT_FILE Dict.cxx)
+SET(DICT_FILE RootHelperUtilsDict.cxx)
 
 ROOT_GENERATE_DICTIONARY(
 	"PlotHelper.h;ProtoEvent.h;ValErrPair.h"
