@@ -3,10 +3,12 @@ INCLUDE_DIRECTORIES(
 	${ROOT_INCLUDE_DIR}
 	)
 
+SET(DICT_FILE Dict.cxx)
+
 ROOT_GENERATE_DICTIONARY(
 	"PlotHelper.h;ProtoEvent.h;ValErrPair.h"
 	${CMAKE_CURRENT_SOURCE_DIR}/LinkDef.h
-	Dict.cxx
+	${DICT_FILE}
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	)
 
@@ -16,7 +18,7 @@ ADD_LIBRARY(
 	PlotHelper.cxx
 	ProtoEvent.cxx
 	ValErrPair.cxx
-	Dict.cxx
+	${DICT_FILE}
 	utils.cc
 	)
 
