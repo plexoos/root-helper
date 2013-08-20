@@ -14,7 +14,7 @@ ROOT_GENERATE_DICTIONARY(
 
 ADD_LIBRARY(
 	root-helper-utils
-	SHARED
+	STATIC
 	PlotHelper.cxx
 	ProtoEvent.cxx
 	ValErrPair.cxx
