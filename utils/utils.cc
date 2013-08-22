@@ -356,6 +356,47 @@ void CopyBinContentError(const TH1* hFrom, TH1* hTo)
 
 
 /** */
+TH1* CopyReversedBinContentError(const TH1* hFrom, TH1* hTo)
+{
+	if (!hFrom) {
+		Warning("CopyReversedBins", "Invalid histogram provided");
+		return 0;
+	}
+
+	if (!hTo) {
+		Info("CopyReversedBins", "New histogram created. Ownership must be assumed");
+	   hTo = new TH1(*hFrom);
+	}
+
+   Int_t nbinsx = hFrom->GetNbinsX();
+   Int_t nbinsy = hFrom->GetNbinsY();
+   Int_t nbinsz = hFrom->GetNbinsZ();
+
+   if (hFrom->GetDimension() < 2) nbinsy = -1;
+   if (hFrom->GetDimension() < 3) nbinsz = -1;
+
+   for (Int_t binzFrom=0, binzTo=nbinsz+1; binzFrom<=nbinsz+1; binzFrom++, binzTo--) {
+      for (Int_t binyFrom=0, binyTo=nbinsy+1; binyFrom<=nbinsy+1; binyFrom++, binyTo--) {
+         for (Int_t binxFrom=0, binxTo=nbinsx+1; binxFrom<=nbinsx+1; binxFrom++, binxTo--) {
+
+            Int_t binFrom = binxFrom + (nbinsx+2)*(binyFrom + (nbinsy+2)*binzFrom);
+            Int_t binTo   = binxTo   + (nbinsx+2)*(binyTo   + (nbinsy+2)*binzTo);
+
+            Double_t bc  = hFrom->GetBinContent(binFrom);
+            Double_t be  = hFrom->GetBinError(binFrom);
+
+            hTo->SetBinContent(binTo, bc);
+            hTo->SetBinError(binTo, be);
+         }
+      }
+   }
+
+   hTo->SetEntries(hFrom->GetEntries());
+	return hTo;
+}
+
+
+/** */
 Double_t getIntegralLimits(TH1F* h, Double_t frac, Int_t &bmin, Int_t &bmax)
 {
    Double_t mean, sum, integral;

@@ -66,6 +66,7 @@ TH1*        ConstructTH1CWithTGraphErrorsMap(std::string name, std::string title
                std::string opts="DUMMY GRIDX GRIDY");
 TGraph*     ExtractTGraph(TH1 &h, std::string sfx="");
 void        CopyBinContentError(const TH1* hFrom, TH1* hTo);
+TH1*        CopyReversedBinContentError(const TH1* hFrom, TH1* hTo=0);
 Double_t    getIntegralLimits(TH1F* h, Double_t frac, Int_t &bmin, Int_t &bmax);
 TH2F*       correctFit(TH2F* h2, TF1* f1);
 void        saveCanvas(TCanvas *canvas);
