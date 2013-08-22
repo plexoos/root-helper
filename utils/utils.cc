@@ -1318,7 +1318,7 @@ Double_t GetNonEmptyFraction(const TH1* h)
 
 
 /** */
-TH1* AverageIgnoreEmptyBins(TH1* h1, TH1* h2, TH1* h)
+TH1* AverageIgnoreEmptyBins(const TH1* h1, const TH1* h2, TH1* h)
 {
    if (!h) h = new TH1(*h1);
 
@@ -1340,34 +1340,16 @@ TH1* AverageIgnoreEmptyBins(TH1* h1, TH1* h2, TH1* h)
 
             //special case where histograms have the kIsAverage bit set
             Double_t y1 = h1->GetBinContent(bin);
-            Double_t y2 = h2->GetBinContent(bin);
             Double_t e1 = h1->GetBinError(bin);
+            Double_t y2 = h2->GetBinContent(bin);
             Double_t e2 = h2->GetBinError(bin);
-            Double_t w1 = 1., w2 = 1.;
 
-            //if (y1<=0 && e1<=0 && y2<=0 && e2<=0) continue;
-            if ( (y1<=0 && e1<=0) || (y2<=0 && e2<=0) ) continue;
+            ValErrPair result = CalcWeightedAvrgErr( ValErrPair(y1, e1), ValErrPair(y2, e2) );
 
-            if (y1<=0 && e1<=0) {
-               h->SetBinContent(bin, y2);
-               h->SetBinError(bin, e2);
-               continue;
-            }
+				if (result.second <= 0) continue;
 
-            if (y2<=0 && e2<=0) {
-               h->SetBinContent(bin, y1);
-               h->SetBinError(bin, e1);
-               continue;
-            }
-
-            w1 = 1./(e1*e1);
-            w2 = 1./(e2*e2);
-
-            double y    =  (w1*y1 + w2*y2)/(w1 + w2);
-            double err2 =  1./(w1 + w2);
-
-            h->SetBinContent(bin, y);
-            h->SetBinError(bin, err2);
+            h->SetBinContent(bin, result.first);
+            h->SetBinError(bin, result.second);
          }
       }
    }

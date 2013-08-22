@@ -95,7 +95,7 @@ Double_t    GetNonEmptyMinimum(TH1* h, Double_t minvalue=-FLT_MAX);
 Double_t    GetNonEmptyMaximum(THStack* hs, Option_t *option);
 Double_t    GetNonEmptyMinimum(THStack* hs, Option_t *option);
 Double_t    GetNonEmptyFraction(const TH1* h);
-TH1*        AverageIgnoreEmptyBins(TH1* h1, TH1* h2, TH1* h);
+TH1*        AverageIgnoreEmptyBins(const TH1* h1, const TH1* h2, TH1* h);
 TH1*        Divide(TH1* h1, TH1* h2, Double_t r12=0, TH1* h=0);
 Double_t    WeightedMean(Double_t *A, Double_t *dA, int NDAT);
 Double_t    WeightedMeanError(Double_t *dA, int NDAT);
