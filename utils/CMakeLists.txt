@@ -12,14 +12,25 @@ ROOT_GENERATE_DICTIONARY(
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	)
 
-ADD_LIBRARY(
-	root-helper-utils
-	STATIC
+SET(
+	SOURCES
 	PlotHelper.cxx
 	ProtoEvent.cxx
 	ValErrPair.cxx
 	${DICT_FILE}
 	utils.cc
+	)
+
+ADD_LIBRARY(
+	root-helper-utils
+	STATIC
+	${SOURCES}
+	)
+
+ADD_LIBRARY(
+	root-helper-utils-shared
+	SHARED
+	${SOURCES}
 	)
 
 TARGET_LINK_LIBRARIES(
