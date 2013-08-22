@@ -1,10 +1,3 @@
-/**
- *
- * Authors/Contributors:
- *    Dmitri Smirnov
- *
- */
-
 #ifndef utils_h
 #define utils_h
 
@@ -37,14 +30,15 @@
 #include "ValErrPair.h"
 
 
+/**
+ * \namespace utils
+ * \author Dmitri Smirnov
+ *
+ * A collection of functions and routines to perform common basic operations on ROOT objects.
+ */
 namespace utils {
 
-//typedef std::pair<Double_t, Double_t>          ValErrPair;
-//typedef std::set<ValErrPair>                   ValErrSet;
-//typedef ValErrSet::iterator                    ValErrSetIter;
-
 typedef std::pair<Double_t, Double_t>          XYPair;
-
 
 void        Apply(TH1* h, TF1* f);
 void        PrintProgress(Int_t i, Int_t iMax);
@@ -116,10 +110,6 @@ void        SetXYAxisIntBinsLabels(TH1* h, Int_t xmin, Int_t xmax, Int_t ymin, I
 
 class SystRatioFitFunctor
 {
-private:
-   TH1D      fHRatio;
-   ValErrSet fSet;
-
 public:
 
    SystRatioFitFunctor() {};
@@ -140,12 +130,8 @@ public:
 
    Double_t operator()(double *x, double *p)
    {
-      /*printf("", x);*/ //return 1;
-
       Double_t chi2_sum = 0;
       Int_t    nPoints  = 0;
-
-      //fHRatio.Print();
 
       ValErrSetIter iValErr = fSet.begin();
 
@@ -164,6 +150,11 @@ public:
 
       return chi2_sum/nPoints - 1;
    };
+
+private:
+
+   TH1D      fHRatio;
+   ValErrSet fSet;
 };
 
 }

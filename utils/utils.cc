@@ -1,9 +1,3 @@
-/*****************************************************************************
- *                                                                           *
- * 2006 Dmitri Smirnov                                                       *
- *                                                                           *
- *****************************************************************************/
-
 #include <algorithm>
 #include <functional>
 #include <sstream>
@@ -142,10 +136,6 @@ TH1F* ConvertToCumulative2(const TH1* h, TH1F* hCumul, Bool_t sort)
       }
    }
 
-   //cout << "hContent: ";
-   //copy(hContent.begin(), hContent.end(), ostream_iterator<Double_t>(cout, ", "));
-   //cout << endl;
-
    return hCumul;
 }
 
@@ -192,23 +182,6 @@ TH1* ConvertToProfile(const TH1* h, TH1* p, Bool_t weighted)
    }
 
    return p;
-
-   //p->GetListOfFunctions()->Add();
-
-   //p->SetBinContent(1, n);
-   //p->SetBinError(1, TMath::Sqrt(err));
-
-   //p->SetBinContent(2, n);
-   //p->SetBinError(2, TMath::Sqrt(err/(n-1)));
-
-   //p->SetBinContent(3, n);
-   //p->SetBinError(3, TMath::Sqrt(1./err));
-   //cout << "bin err: " << err << ", " << p->GetBinError(3) << endl;
-
-   //p->SetBinContent(2, TMath::Sqrt(err));
-   //p->SetBinError(2, TMath::Sqrt(err));
-   //h->Print("all");
-   //p->Print("all");
 }
 
 
@@ -1045,7 +1018,6 @@ void PrintNice(TH1* h, FILE *f)
       ye = gr->GetErrorY(i);
       fprintf(f, "%8d, %8.3f, %8.3f, %8.3f, %8.3f\n", i, x, y, xe, ye);
    }
-
 }
 
 
@@ -1317,7 +1289,9 @@ Double_t GetNonEmptyFraction(const TH1* h)
 }
 
 
-/** */
+/** 
+ * Calculates the weighted average of two histograms ignorging bins with invalid content.
+ */
 TH1* AverageIgnoreEmptyBins(const TH1* h1, const TH1* h2, TH1* h)
 {
    if (!h) h = new TH1(*h1);
