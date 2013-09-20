@@ -4,6 +4,8 @@ INCLUDE_DIRECTORIES(
 	)
 
 SET(DICT_FILE RootHelperUtilsDict.cxx)
+# To make sure the same flags as for root are used. Prompted be the -m32 flag
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ROOT_CONFIG_CFLAGS}")
 
 ROOT_GENERATE_DICTIONARY(
 	"PlotHelper.h;MultiGraph.h;ProtoEvent.h;ValErrPair.h"
