@@ -6,7 +6,7 @@ INCLUDE_DIRECTORIES(
 SET(DICT_FILE RootHelperUtilsDict.cxx)
 
 ROOT_GENERATE_DICTIONARY(
-	"PlotHelper.h;ProtoEvent.h;ValErrPair.h"
+	"PlotHelper.h;MultiGraph.h;ProtoEvent.h;ValErrPair.h"
 	${CMAKE_CURRENT_SOURCE_DIR}/LinkDef.h
 	${DICT_FILE}
 	"${CMAKE_CURRENT_SOURCE_DIR}"
@@ -15,6 +15,7 @@ ROOT_GENERATE_DICTIONARY(
 SET(
 	SOURCES
 	PlotHelper.cxx
+	MultiGraph.cxx
 	ProtoEvent.cxx
 	ValErrPair.cxx
 	${DICT_FILE}
