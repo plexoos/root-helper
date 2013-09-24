@@ -389,6 +389,8 @@ void PlotHelper::SaveAllAs(TCanvas &canvas, std::string pattern, string path, Bo
                //cout << "stats not found" << endl;
             }
          }
+      } else { // just draw the object
+         obj->Draw();
       }
 
       TLatex signature(0, 0, fSignature.c_str());
