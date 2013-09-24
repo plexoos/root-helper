@@ -1,6 +1,7 @@
 
 #include "MultiGraph.h"
 
+#include "TH1F.h"
 #include "TList.h"
 #include "TGraph.h"
 #include "TPad.h"
@@ -30,10 +31,20 @@ void MultiGraph::SetHistogram(TH1F* h)
 
 void MultiGraph::Draw(Option_t* chopt)
 {
-   TMultiGraph::Draw(chopt);
+   if (fHistogram) {
+      fHistogram->SetStats(kFALSE);
+      fHistogram->Draw();
+      TMultiGraph::Draw(chopt);
+   }
+
    gPad->Update();
 
-   TIter  next(GetListOfGraphs());
+   TList* graphs = GetListOfGraphs();
+
+   if (graphs->GetSize() < 1) return;
+
+   TIter  next(graphs);
+   Double_t height = graphs->GetSize() > 5 ? 0.95/graphs->GetSize() : 0.18;
    UShort_t iStat = 0;
 
    while ( TGraph *iGraph = (TGraph*) next() )
@@ -46,9 +57,9 @@ void MultiGraph::Draw(Option_t* chopt)
          stats->SetLineColor(iGraph->GetMarkerColor());
          stats->SetLineWidth(2);
          stats->SetX1NDC(0.80);
-         stats->SetY1NDC(0.81 - iStat*0.18);
+         stats->SetY1NDC(0.99 - height*(iStat+1) );
          stats->SetX2NDC(0.99);
-         stats->SetY2NDC(0.99 - iStat*0.18);
+         stats->SetY2NDC(0.99 - iStat*height);
 
          iStat++;
       }
