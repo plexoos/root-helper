@@ -8,7 +8,7 @@ SET(DICT_FILE RootHelperUtilsDict.cxx)
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ROOT_CONFIG_CFLAGS}")
 
 ROOT_GENERATE_DICTIONARY(
-	"PlotHelper.h;MultiGraph.h;ProtoEvent.h;ValErrPair.h"
+	"H2I.h;PlotHelper.h;MultiGraph.h;ProtoEvent.h;ValErrPair.h"
 	${CMAKE_CURRENT_SOURCE_DIR}/LinkDef.h
 	${DICT_FILE}
 	"${CMAKE_CURRENT_SOURCE_DIR}"
@@ -16,6 +16,7 @@ ROOT_GENERATE_DICTIONARY(
 
 SET(
 	SOURCES
+	H2I.cxx
 	PlotHelper.cxx
 	MultiGraph.cxx
 	ProtoEvent.cxx
