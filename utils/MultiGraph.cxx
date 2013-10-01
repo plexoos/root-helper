@@ -31,6 +31,11 @@ void MultiGraph::SetHistogram(TH1F* h)
 
 void MultiGraph::Draw(Option_t* chopt)
 {
+   // First check if this container is not empty
+   TList* graphs = GetListOfGraphs();
+
+   if (graphs->GetSize() < 1) return;
+
    if (fHistogram) {
       fHistogram->SetStats(kFALSE);
       fHistogram->Draw();
@@ -38,10 +43,6 @@ void MultiGraph::Draw(Option_t* chopt)
    }
 
    gPad->Update();
-
-   TList* graphs = GetListOfGraphs();
-
-   if (graphs->GetSize() < 1) return;
 
    TIter  next(graphs);
    Double_t height = graphs->GetSize() > 5 ? 0.95/graphs->GetSize() : 0.18;
