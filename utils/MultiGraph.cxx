@@ -34,7 +34,7 @@ void MultiGraph::Draw(Option_t* chopt)
    // First check if this container is not empty
    TList* graphs = GetListOfGraphs();
 
-   if (graphs->GetSize() < 1) return;
+   if (!graphs || graphs->GetSize() < 1) return;
 
    if (fHistogram) {
       fHistogram->SetStats(kFALSE);
