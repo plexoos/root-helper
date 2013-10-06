@@ -44,3 +44,8 @@ TARGET_LINK_LIBRARIES(
 	root-helper-utils-shared
 	${ROOT_LIBRARIES}
 	)
+
+IF(FORCE_32BIT)
+        SET_TARGET_PROPERTIES(root-helper-utils PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+        SET_TARGET_PROPERTIES(root-helper-utils-shared PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+ENDIF()
