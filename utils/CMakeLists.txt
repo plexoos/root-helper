@@ -41,3 +41,8 @@ TARGET_LINK_LIBRARIES(
 	root-helper-utils
 	${ROOT_LIBRARIES}
 	)
+
+TARGET_LINK_LIBRARIES(
+	root-helper-utils-shared
+	${ROOT_LIBRARIES}
+	)
