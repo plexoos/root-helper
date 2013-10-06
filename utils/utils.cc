@@ -519,7 +519,9 @@ Int_t FindMaximumBinEx(TH1F *h, int blur_radius)
       }
       blurred->SetBinContent(bin, value);
    }
-   return blurred->GetMaximumBin();
+   Int_t max_bin = blurred->GetMaximumBin();
+   delete blurred;
+   return max_bin;
 }
 
 
