@@ -4,8 +4,6 @@ INCLUDE_DIRECTORIES(
 	)
 
 SET(DICT_FILE RootHelperUtilsDict.cxx)
-# To make sure the same flags as for root are used. Prompted be the -m32 flag
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ROOT_CONFIG_CFLAGS}")
 
 ROOT_GENERATE_DICTIONARY(
 	"H2I.h;PlotHelper.h;MultiGraph.h;ProtoEvent.h;ValErrPair.h"
@@ -46,3 +44,8 @@ TARGET_LINK_LIBRARIES(
 	root-helper-utils-shared
 	${ROOT_LIBRARIES}
 	)
+
+IF(FORCE_32BIT)
+        SET_TARGET_PROPERTIES(root-helper-utils PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+        SET_TARGET_PROPERTIES(root-helper-utils-shared PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+ENDIF()
