@@ -67,6 +67,7 @@ void        saveCanvas(TCanvas *canvas);
 TList*      getFileList(TString fListName);
 void        fluctuatePoisson(TH1* h, TRandom* rnd=0);
 int         FindFirstBinAbove(TH1F* h, double cl);
+Int_t       FindMaximumBinEx(TH1F *h, int blur_radius);
 void        BinGraph(TGraphErrors* gr, TH1* h);
 void        BinGraphByFirstOnly(TGraphErrors* gr, TH1* h);
 void        BinGraphsByMeasId(TList* grList, TH1* h, Bool_t norm=kFALSE);

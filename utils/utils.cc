@@ -503,6 +503,26 @@ int FindFirstBinAbove(TH1F* h, double cl)
 }
 
 
+/** Gets maximum bin in blurred hist */
+Int_t FindMaximumBinEx(TH1F *h, int blur_radius)
+{
+   TH1F *blurred = (TH1F*)h->Clone("blurred");
+   blurred->Reset();
+   Int_t xfirst  = blurred->GetXaxis()->GetFirst();
+   Int_t xlast   = blurred->GetXaxis()->GetLast();
+   for (Int_t bin = xfirst; bin <= xlast; bin++) {
+      Int_t start = TMath::Max(bin - blur_radius, xfirst);
+      Int_t end   = TMath::Min(bin + blur_radius, xlast);
+      Double_t value = 0;
+      for (int i = start; i <= end; i++) {
+         value += h->GetBinContent(i);
+      }
+      blurred->SetBinContent(bin, value);
+   }
+   return blurred->GetMaximumBin();
+}
+
+
 /** */
 void BinGraph(TGraphErrors* gr, TH1* h)
 {
