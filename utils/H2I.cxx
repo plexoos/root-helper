@@ -46,8 +46,6 @@ double H2I::CalcIntegralAbove(TF1& f1)
 
          double funcVal = f1.Eval(binXCenter);
 
-         printf("iBinX: %d, iBinY: %d, %f, %f, %f\n", iBinX, iBinY, binXCenter, binYCenter, funcVal);
-
          if (binYCenter < funcVal) continue;
          integral += GetBinContent(iBinX, iBinY);
       }
