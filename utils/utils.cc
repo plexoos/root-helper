@@ -1027,7 +1027,14 @@ void AppendToTGraph(TH1 &h, Double_t x, Double_t y, Double_t xe, Double_t ye, st
 void PrintNice(TH1* h, FILE *f)
 {
    TGraphErrors *gr = new TGraphErrors(h);
+	PrintNice(gr, f);
+}
 
+
+/** */
+void PrintNice(TGraph* gr, FILE *f)
+{
+   setbuf(f, NULL);
    fprintf(f, "%s\n", gr->GetName());
 
    fprintf(f, "%8s, %8s, %8s, %8s, %8s\n", "n", "x", "y", "x_err", "y_err");
@@ -1055,7 +1062,20 @@ void PrintNiceToFile(TH1* h, string fileName)
    FILE *f = fopen(fileName.c_str(), "w");
 
    PrintNice(h, f);
+}
 
+
+/** */
+void PrintNiceToFile(TGraph* gr, string fileName)
+{
+   if (fileName == "") {
+      fileName  = gr->GetName();
+      fileName += ".txt";
+   }
+
+   FILE *f = fopen(fileName.c_str(), "w");
+
+   PrintNice(gr, f);
 }
 
 
