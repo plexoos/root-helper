@@ -7,7 +7,11 @@
 #pragma link C++ class ValErrPair+;
 #pragma link C++ class ProtoEvent+;
 #pragma link C++ class PlotHelper+;
+#pragma link C++ class rh::H1I+;
+#pragma link C++ class rh::H1F+;
+#pragma link C++ class rh::H1D+;
 #pragma link C++ class rh::H2I+;
+#pragma link C++ class rh::H2F+;
 #pragma link C++ class rh::H2D+;
 #pragma link C++ class rh::MultiGraph+;
 
