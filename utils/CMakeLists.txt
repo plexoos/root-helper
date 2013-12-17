@@ -3,13 +3,21 @@ INCLUDE_DIRECTORIES(
 	${ROOT_INCLUDE_DIR}
 	)
 
-SET(DICT_FILE RootHelperUtilsDict.cxx)
+SET(DICT_FILE RootHelperUtilsDict)
 
 ROOT_GENERATE_DICTIONARY(
-	"H1F.h;H1I.h;H1D.h;H2F.h;H2I.h;H2D.h;PlotHelper.h;MultiGraph.h;ProtoEvent.h;ValErrPair.h"
-	${CMAKE_CURRENT_SOURCE_DIR}/LinkDef.h
 	${DICT_FILE}
-	"${CMAKE_CURRENT_SOURCE_DIR}"
+	H1F.h
+	H1D.h
+	H1I.h
+	H2D.h
+	H2F.h
+	H2I.h
+	MultiGraph.h
+	PlotHelper.h
+	ProtoEvent.h
+	ValErrPair.h
+	LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/LinkDef.h
 	)
 
 SET(
@@ -24,7 +32,7 @@ SET(
 	MultiGraph.cxx
 	ProtoEvent.cxx
 	ValErrPair.cxx
-	${DICT_FILE}
+	${DICT_FILE}.cxx
 	utils.cc
 	)
 
