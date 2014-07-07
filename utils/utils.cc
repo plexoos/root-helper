@@ -338,7 +338,7 @@ TH1* CopyReversedBinContentError(const TH1* hFrom, TH1* hTo)
 
 	if (!hTo) {
 		Info("CopyReversedBins", "New histogram created. Ownership must be assumed");
-	   hTo = new TH1(*hFrom);
+	   hTo = (TH1*)hFrom->Clone();
 	}
 
    Int_t nbinsx = hFrom->GetNbinsX();
@@ -1336,7 +1336,7 @@ Double_t GetNonEmptyFraction(const TH1* h)
  */
 TH1* AverageIgnoreEmptyBins(const TH1* h1, const TH1* h2, TH1* h)
 {
-   if (!h) h = new TH1(*h1);
+   if (!h) h = (TH1*)h1->Clone();
 
    h->Reset();
 
@@ -1377,7 +1377,7 @@ TH1* AverageIgnoreEmptyBins(const TH1* h1, const TH1* h2, TH1* h)
 /** */
 TH1* Divide(TH1* h1, TH1* h2, Double_t r12, TH1* h)
 {
-   if (!h) h = new TH1(*h1);
+   if (!h) h = (TH1*)h1->Clone();
 
    h->Reset();
 
