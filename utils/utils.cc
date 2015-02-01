@@ -504,7 +504,7 @@ int FindFirstBinAbove(TH1F* h, double cl)
 
 
 /** Gets maximum bin in blurred hist */
-Int_t FindMaximumBinEx(TH1F *h, int blur_radius)
+Int_t FindMaximumBinEx(TH1F *h, int blur_radius, float *max_value)
 {
    TH1F *blurred = (TH1F*)h->Clone("blurred");
    blurred->Reset();
@@ -517,9 +517,12 @@ Int_t FindMaximumBinEx(TH1F *h, int blur_radius)
       for (int i = start; i <= end; i++) {
          value += h->GetBinContent(i);
       }
-      blurred->SetBinContent(bin, value);
+      blurred->SetBinContent(bin, value / (end - start + 1));
    }
    Int_t max_bin = blurred->GetMaximumBin();
+   if (max_value != NULL) {
+     *max_value = blurred->GetBinContent(max_bin);
+   }
    delete blurred;
    return max_bin;
 }
