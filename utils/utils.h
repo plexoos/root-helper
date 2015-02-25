@@ -109,6 +109,7 @@ TEllipse*   GetEllipse(TVector2 xy1, TVector2 xy2, Double_t x1, Double_t y1, Dou
 TEllipse*   GetErrorEllipse(const ValErrPair &p1, const ValErrPair &p2, Double_t corr=0);
 void        SetXAxisIntBinsLabels(TH1* h, Int_t xmin, Int_t xmax, Float_t tfx=0.05, Int_t ny=100);
 void        SetXYAxisIntBinsLabels(TH1* h, Int_t xmin, Int_t xmax, Int_t ymin, Int_t ymax, Float_t tfx=0.10);
+double      find_baseline(TH1F *h, double signal_fraction);
 
 
 class SystRatioFitFunctor

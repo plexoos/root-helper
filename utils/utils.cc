@@ -1,6 +1,8 @@
 #include <algorithm>
+#include <numeric>
 #include <functional>
 #include <sstream>
+#include <cassert>
 
 #include "utils.h"
 
@@ -1753,6 +1755,108 @@ void SetXYAxisIntBinsLabels(TH1* h, Int_t xmin, Int_t xmax, Int_t ymin, Int_t ym
    h->LabelsOption("v");
    //xAxis->SetNdivisions(nx-1, kFALSE);
    //xAxis->SetNdivisions(nLabels, kFALSE);
+}
+
+
+double cluster_exclusive_norm(const vector<double> &xs, const vector<double>::const_iterator it)
+{
+   double result = 0;
+   for(vector<double>::const_iterator i = xs.begin(); i != xs.end(); i++)
+   {
+      if (i == it) continue;
+      for(vector<double>::const_iterator j = i + 1; j != xs.end(); j++)
+      {
+         if (j == it) continue;
+         result += fabs((*i) - (*j));
+      }
+   }
+   return result;
+}
+
+
+/**
+ * Implementation of greedy algorithm that finds a subset with a minimal norm.
+ */
+void find_cluster(vector<double> &xs, int cluster_size)
+{
+   if (xs.size() == 0) return;
+
+   int nsteps = xs.size() - cluster_size;
+   for(int step = 1; step <= nsteps; step++)
+   {
+      vector<double> norm(xs.size());
+      vector<double>::iterator norm_it = norm.begin();
+      for(vector<double>::const_iterator it = xs.begin(); it != xs.end(); it++)
+      {
+         *norm_it = cluster_exclusive_norm(xs, it);
+         norm_it++;
+      }
+      int max_index = std::min_element(norm.begin(), norm.end()) - norm.begin();
+      xs.erase(xs.begin() + max_index);
+   }
+}
+
+
+double find_baseline(vector<double> &xs, double signal_fraction)
+{
+   if (xs.size() == 0) throw;
+
+   int cluster_size = std::max((int)(xs.size() * (1 - signal_fraction)), 1);
+   find_cluster(xs, cluster_size);
+
+   return std::accumulate(xs.begin(), xs.end(), 0.0) / xs.size();
+}
+
+
+void find_baseline_test()
+{
+   vector<double> xs;
+   xs.push_back(123.0);
+   assert(find_baseline(xs, 0.0) == 123.0);
+
+   xs.clear();
+   xs.push_back(123.0);
+   assert(find_baseline(xs, 1.0) == 123.0);
+
+   xs.clear();
+   xs.push_back(1);
+   xs.push_back(2);
+   xs.push_back(3);
+   xs.push_back(4);
+   xs.push_back(1000);
+   xs.push_back(-1000);
+   double result = find_baseline(xs, 0.5);
+   assert(result > 1);
+   assert(result < 4);
+
+   for(int i = 0; i < 100; i += 33)
+   {
+      xs.clear();
+      xs.resize(100, 42.0);
+      xs[i] = 10e6;
+      assert(find_baseline(xs, 0.5) == 42);
+   }
+}
+
+
+/**
+ * Beware that underlying implementation is O(N^4)
+ * @param signal_fraction Your estimate for maximal fraction of signal bins in the histogram
+ */
+double find_baseline(TH1F *h, double signal_fraction)
+{
+   find_baseline_test();
+
+   int n = h->GetXaxis()->GetNbins();
+   vector<double> xs(n);
+
+   Int_t xfirst  = h->GetXaxis()->GetFirst();
+   Int_t xlast   = h->GetXaxis()->GetLast();
+   for(Int_t binx=xfirst; binx<=xlast; binx++) {
+      xs[binx-xfirst] = h->GetBinContent(binx);
+   }
+
+   return find_baseline(xs, signal_fraction);
 }
 
 
