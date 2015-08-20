@@ -14,6 +14,8 @@ public:
    H2F();
    H2F(std::string name, std::string title, Int_t nbinsx, Double_t xlow, Double_t xup, Int_t nbinsy, Double_t ylow, Double_t yup, std::string options="");
 
+   double CalcIntegralAbove(TF1& f1);
+
    ClassDef(H2F, 1)
 };
 
