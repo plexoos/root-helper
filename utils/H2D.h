@@ -13,6 +13,7 @@ public:
 
    H2D();
    H2D(std::string name, std::string title, Int_t nbinsx, Double_t xlow, Double_t xup, Int_t nbinsy, Double_t ylow, Double_t yup, std::string options="");
+   H2D(std::string name, std::string title, Int_t nbinsx, const Double_t* xbins, Int_t nbinsy, Double_t ylow, Double_t yup, std::string options="");
 
    ClassDef(H2D, 1)
 };

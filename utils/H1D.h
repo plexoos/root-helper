@@ -13,6 +13,7 @@ public:
 
    H1D();
    H1D(std::string name, std::string title, Int_t nbinsx, Double_t xlow, Double_t xup, std::string options="");
+   H1D(std::string name, std::string title, Int_t nbinsx, const Double_t* xbins, std::string options="");
 
    ClassDef(H1D, 1)
 };
