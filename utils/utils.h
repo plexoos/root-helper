@@ -146,7 +146,6 @@ public:
 
           if (!be && !bc) continue; // skip empty bins
 
-          //hRatioCopy->SetBinError(ib, sqrt(be*be + dSyst*dSyst));
           Double_t chi2 = (bc - 1)*(bc - 1)/(be*be + x[0]*x[0]);
           chi2_sum += chi2;
           nPoints++;

@@ -22,13 +22,8 @@ void Apply(TH1* h, TF1* f)
    {
       Double_t bc = h->GetBinContent(ib);
       bc = f->Eval(bc);
-      //if ( isnan(bc) ) continue; // watch out!
-      //cout << ib << " apply bc: " << bc;
-      //if ( bc != bc ) continue; // watch out!
       if ( !isnormal(bc) ) continue; // watch out!
-      //cout << " passed " << endl;
 
-      //bc = isnan(bc) ? 0 : bc;
       h->SetBinContent(ib, bc);
    }
 }
@@ -46,10 +41,10 @@ void PrintProgress(Int_t i, Int_t iMax)
    }
    // # of arrows per unit increment in i
    Double_t coef = 56.0/(Double_t)(iMax);
-   //
+
    for (Int_t j=(Int_t)(coef*i); j!=(Int_t)(coef*(i+1)); ++j)
       cout << ">" << flush;
-   //
+
    if (i==iMax-1)
       cout << ">" << endl;
 }
@@ -66,7 +61,6 @@ void PrintTLorentzVector(const TLorentzVector &lv)
 /** */
 void ConvertToCumulative(TH1* h, Double_t norm)
 {
-   //h->Print("all");
    if (norm <= 0) { norm = 1.; }
 
    if (h->Integral()) 
@@ -78,7 +72,6 @@ void ConvertToCumulative(TH1* h, Double_t norm)
       integral = h->Integral(1, i);
       h->SetBinContent(i, integral);
    }
-   //h->Print("all");
 }
 
 
@@ -145,13 +138,6 @@ TH1F* ConvertToCumulative2(const TH1* h, TH1F* hCumul, Bool_t sort)
 /** */
 TH1* ConvertToProfile(const TH1* h, TH1* p, Bool_t weighted)
 {
-   //h->Print("all");
-   //h->Scale(1./h->Integral());
-   //Double_t err = 0;
-   //Int_t    n = 0;
-
-   //h->GetYaxis()->UnZoom();
-
    Double_t ymax = h->GetMaximum();
    Double_t ymin = h->GetMinimum();
 
@@ -159,28 +145,17 @@ TH1* ConvertToProfile(const TH1* h, TH1* p, Bool_t weighted)
       p = new TH1D("p", "p", 100, ymin-0.1*fabs(ymax-ymin), ymax+0.1*fabs(ymax-ymin));
    }
 
-   //p->GetXaxis()->SetRangeUser(h->GetYaxis()->GetXmin(), h->GetYaxis()->GetXmax());
-   //p->GetXaxis()->SetRangeUser(ymin-0.1*fabs(ymax-ymin), ymax+0.1*fabs(ymax-ymin));
-
    for (int i=1; i<=h->GetNbinsX(); i++) {
       Double_t bc = h->GetBinContent(i);
       Double_t be = h->GetBinError(i);
 
       if (weighted && bc != 0 && be != 0) {
          p->Fill(bc, 1/be/be);
-         //p->Fill(bc);
       }
 
       if (!weighted && (bc != 0 || be != 0) ) {
-      //if (!weighted) {
          p->Fill(bc);
       }
-
-      //Double_t berr = h->GetBinError(i);
-      //if (berr) {
-      //   err += (berr*berr); // 1./(berr*berr)
-      //   n++;
-      //}
    }
 
    return p;
@@ -294,7 +269,6 @@ TH1* ConstructTH1CWithTGraphErrorsMap(string name, string title,
 TGraph* ExtractTGraph(TH1 &h, string sfx)
 {
    string hName = h.GetName();
-   //hName.erase(0, 1);
    hName = "gr" + hName + sfx;
    TGraph *graph = (TGraph*) h.GetListOfFunctions()->FindObject(hName.c_str());
    return graph;
@@ -405,9 +379,6 @@ TH2F* correctFit(TH2F* h2, TF1* f1)
 {
    string hName = h2->GetName();
    hName += "_corr";
-   //TH2F* h2c = new TH2F("correctTdcVsZ", "correctTdcVsZ", 100, -150, 150, 130, -50, 80);
-   //TH2F* h2c = new TH2F(hName.c_str(), hName.c_str(), 100, min, max, 130, -50, 80);
-   //sprintf(hName, "%s-hCotTimeResVsCh", hdiName);
    TH2F* h2c = (TH2F*) h2->Clone(hName.c_str());
    h2c->Reset();
    double ymin  = h2->GetYaxis()->GetXmin();
@@ -424,7 +395,6 @@ TH2F* correctFit(TH2F* h2, TF1* f1)
 
          int    ib  = h2->GetBin(ix, iy);
          double bc  = h2->GetBinContent(ib);
-         //printf("%3d, %3d: %3f\n", ix, iy, bc);
 
          double y = f1->Eval(xbc);
          int ib2 = h2c->FindBin(xbc, ybc-y);
@@ -455,7 +425,6 @@ TList* getFileList(TString fListName)
 
    // loop over the files
    while(infile >> fileId){
-      //printf("file: %s\n", fileId.c_str());
       coll->Add(new TObjString(fileId.c_str()));
    }
 
@@ -466,7 +435,6 @@ TList* getFileList(TString fListName)
 /** */
 void fluctuatePoisson(TH1* h, TRandom* rnd)
 {
-   //bool rndSet = false;
    TRandom tmpRnd;
 
    if (!rnd) { rnd = &tmpRnd; }
@@ -487,10 +455,6 @@ void fluctuatePoisson(TH1* h, TRandom* rnd)
          //}
       //}
    }
-
-   //h->SetEntries(h->GetIntegral());
-
-   //if (rndSet) delete rnd;
 }
 
 
@@ -562,9 +526,6 @@ void BinGraph(TGraphErrors* gr, TH1* h)
          ibe_new = 1./TMath::Sqrt(w1 + w2);
       }
 
-      //printf("i: %8d %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f\n", ib, ibc, ibe, x, y, ye, w1, w2, ibc_new, ibe_new);
-      //printf("i: %8d %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f\n", ib, ibc, ibe, x, y, ye, ibc_new, ibe_new);
-
       h->SetBinContent(ib, ibc_new);
       h->SetBinError(ib, ibe_new);
    }
@@ -580,8 +541,6 @@ void BinGraphByFirstOnly(TGraphErrors* gr, TH1* h)
    for (Int_t i=0; i<gr->GetN(); i++)
    {
       gr->GetPoint(i, x, y);
-
-      //if (fabs(x) > 3) continue;
 
       xe = gr->GetErrorX(i);
       ye = gr->GetErrorY(i);
@@ -599,9 +558,6 @@ void BinGraphByFirstOnly(TGraphErrors* gr, TH1* h)
       } else { // the bin has been filled already, so skip all other values for this x/ib
          continue;
       }
-
-      //printf("i: %8d %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f\n", ib, ibc, ibe, x, y, ye, w1, w2, ibc_new, ibe_new);
-      //printf("i: %8d %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f\n", ib, ibc, ibe, x, y, ye, ibc_new, ibe_new);
 
       h->SetBinContent(ib, ibc_new);
       h->SetBinError(ib, ibe_new);
@@ -653,9 +609,6 @@ void BinGraphsByMeasId(TList* grList, TH1* h, Bool_t norm)
             ibc_new = (w1*y + w2*ibc)/(w1 + w2);
             ibe_new = 1./TMath::Sqrt(w1 + w2);
          }
-
-         //printf("i: %8d %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f\n", ib, ibc, ibe, x, y, ye, w1, w2, ibc_new, ibe_new);
-         //printf("i: %8d %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f\n", ib, ibc, ibe, x, y, ye, ibc_new, ibe_new);
 
          h->SetBinContent(ib, ibc_new);
          h->SetBinError(ib, ibe_new);
@@ -725,10 +678,7 @@ void RemoveOutliers(TGraph* gr, Int_t axis, Float_t sigma)
    Double_t mean = gr->GetMean(axis);
    Double_t rms  = gr->GetRMS(axis);
 
-   //printf("mean, rms: %f, %f\n", mean, rms);
-
    Double_t x, y;
-   //vector<Int_t> toberemoved;
 
    for (Int_t i=0; i<gr->GetN(); i++) {
 
@@ -738,11 +688,8 @@ void RemoveOutliers(TGraph* gr, Int_t axis, Float_t sigma)
       if (axis == 1 ) delta = fabs(mean - x);
       if (axis == 2 ) delta = fabs(mean - y);
 
-      //printf("delta: %f\n", delta);
-
       if (delta > sigma*rms) {
          gr->RemovePoint(i);//toberemoved.push_back(i);
-         //printf("point %d removed\n", i);
          i--;
       }
    }
@@ -755,14 +702,10 @@ void RemoveOutliers(TH1* h, Float_t sigmax)
    Double_t meanx = h->GetMean(1);
    Double_t rmsx  = h->GetRMS(1);
 
-   //printf("meanx, rmsx: %f, %f\n", meanx, rmsx);
-
    for (Int_t ibx=1; ibx<=h->GetNbinsX(); ibx++) {
 
       Double_t bcentr = h->GetBinCenter(ibx);
       Double_t delta = fabs(meanx - bcentr);
-
-      //printf("delta: %f\n", delta);
 
       if (delta > sigmax*rmsx) {
          h->SetBinContent(ibx, 0);
@@ -823,7 +766,6 @@ void UpdateLimits(TH1* h, Int_t axis, Bool_t incErr)
 
             if (valPlusErr  > max) max = valPlusErr;
             if (valMinusErr < min) min = valMinusErr;
-            //Info("utils::UpdateLimits", "bin, value, error, max, min: %d, %f, %f, %f, %f\n", bin, value, error, max, min);
          }
       }
    }
@@ -832,9 +774,7 @@ void UpdateLimits(TH1* h, Int_t axis, Bool_t incErr)
       if (max <= min) return;
       Double_t margin = fabs(max - min)*0.1;
       h->GetYaxis()->SetRangeUser(min-margin, max+margin);
-      //h->GetYaxis()->SetLimits(min, max); // this does not work for some reason
    } else if (h->GetDimension() == 2) {
-      //h->GetZaxis()->SetLimits(min, max);
       h->GetZaxis()->SetRangeUser(min, max);
    } else {
       Warning("utils::UpdateLimits", "Expected a TH1 or TH2 histogram");
@@ -845,8 +785,6 @@ void UpdateLimits(TH1* h, Int_t axis, Bool_t incErr)
 /** */
 void UpdateLimitsFromGraphs(TH1* h, Int_t axis, Bool_t incErr)
 {
-   //gSystem->Warning("utils::UpdateLimitsFromGraphs", "Graphs found in histogram %s", h->GetName());
-
    Double_t xmin, ymin, xmax, ymax;
    Double_t xminAll =  DBL_MAX, yminAll =  DBL_MAX;
    Double_t xmaxAll = -DBL_MAX, ymaxAll = -DBL_MAX;
@@ -872,20 +810,15 @@ void UpdateLimitsFromGraphs(TH1* h, Int_t axis, Bool_t incErr)
       if (xmax > xmaxAll) xmaxAll = xmax;
       if (ymin < yminAll) yminAll = ymin;
       if (ymax > ymaxAll) ymaxAll = ymax;
-
-      //printf("xmin, ymin, xmax, ymax, xminAll, yminAll, xmaxAll, ymaxAll: %f, %f, %f, %f, %f, %f, %f, %f\n",
-      //        xmin, ymin, xmax, ymax, xminAll, yminAll, xmaxAll, ymaxAll);
    }
 
    if (axis == 1) {
       if (xmaxAll <= xminAll) return;
       h->GetXaxis()->SetLimits(xminAll, xmaxAll); // why don't use SetRangeUser???
-      //h->GetXaxis()->SetRangeUser(xminAll, xmaxAll);
    } else if (axis == 2) {
       if (ymaxAll <= yminAll) return;
       Double_t margin = fabs(ymaxAll - yminAll)*0.1;
       h->GetYaxis()->SetLimits(yminAll-margin, ymaxAll+margin); // why don't use SetRangeUser???
-      //h->GetYaxis()->SetRangeUser(yminAll, ymaxAll);
    } else {
       if (xmaxAll > xminAll) {
          Double_t margin = fabs(xmaxAll - xminAll)*0.1;
@@ -896,9 +829,6 @@ void UpdateLimitsFromGraphs(TH1* h, Int_t axis, Bool_t incErr)
          Double_t margin = fabs(ymaxAll - yminAll)*0.1;
          h->GetYaxis()->SetLimits(yminAll-margin, ymaxAll+margin);
       }
-
-      //h->GetXaxis()->SetRangeUser(xminAll, xmaxAll);
-      //h->GetYaxis()->SetRangeUser(yminAll, ymaxAll);
    }
 }
 
@@ -906,15 +836,10 @@ void UpdateLimitsFromGraphs(TH1* h, Int_t axis, Bool_t incErr)
 /** */
 void RebinIntegerAxis(TH1* h, Int_t axis)
 {
-   //if (axis == 1) {
       Double_t xmin = h->GetXaxis()->GetXmin();
       Double_t xmax = h->GetXaxis()->GetXmax();
 
       h->SetBins((Int_t) (xmax-xmin), xmin, xmax);
-
-   //} else if (axis == 2) {
-   //} else {
-   //}
 }
 
 
@@ -1096,7 +1021,6 @@ Double_t GetNonEmptyMaximum(TH1* h, Double_t maxval)
    //  whether the value has been overridden, use
    //     h->GetBinContent(h->GetMinimumBin())
 
-   //if (h->fMaximum != -1111) return h->fMaximum;
 
    Int_t bin, binx, biny, binz;
 
@@ -1118,14 +1042,12 @@ Double_t GetNonEmptyMaximum(TH1* h, Double_t maxval)
                error = h->GetBinError(bin);
 
                if (value+error > maximum && value+error < maxval && !(value == 0 && error == 0) )
-               //if (value > maximum && value < maxval )
                   maximum = value+error;
             }
          }
       }
    }
 
-   //if (h->GetDimension() >= 2) return maximum;
 
    // If the histogram is one dimensional and has graph objects update the maximum
    Double_t xmin, ymin, xmax, ymax;
@@ -1133,11 +1055,9 @@ Double_t GetNonEmptyMaximum(TH1* h, Double_t maxval)
    TList* list = h->GetListOfFunctions();
    TIter  next(list);
 
-   //while ( TGraph *graph = (TGraph*) next() ) {
    while ( TObject *graph = (TObject*) next() ) {
       if ( ! ( (TClass*) graph->IsA() )->InheritsFrom("TGraph") ) continue;
       if ( ((TGraph*) graph)->GetN() <= 0) continue;
-      //graph->ComputeRange(xmin, ymin, xmax, ymax);
       ((TGraph*) graph)->ComputeRange(xmin, ymin, xmax, ymax);
       if (ymax > maximum) maximum = ymax;
    }
@@ -1158,7 +1078,6 @@ Double_t GetNonEmptyMinimum(TH1* h, Double_t minval)
    //  whether the value has been overridden, use
    //     h->GetBinContent(h->GetMinimumBin())
 
-   //if (h->fMinimum != -1111) return h->fMinimum;
 
    Int_t bin, binx, biny, binz;
 
@@ -1180,14 +1099,11 @@ Double_t GetNonEmptyMinimum(TH1* h, Double_t minval)
                error = h->GetBinError(bin);
 
                if (value-error < minimum && value-error > minval && !(value == 0 && error == 0) )
-               //if (value < minimum && value > minval )
                   minimum = value-error;
             }
          }
       }
    }
-
-   //if (h->GetDimension() >= 2) return minimum;
 
    // If the histogram is one dimensional and has graph objects update the minimum
    Double_t xmin, ymin, xmax, ymax;
@@ -1195,7 +1111,6 @@ Double_t GetNonEmptyMinimum(TH1* h, Double_t minval)
    TList* list = h->GetListOfFunctions();
    TIter  next(list);
 
-   //while ( TGraph *graph = (TGraph*) next() ) {
    while ( TObject *graph = (TObject*) next() ) {
       if ( ! ( (TClass*) graph->IsA() )->InheritsFrom("TGraph") ) continue;
       if ( ((TGraph*) graph)->GetN() <= 0) continue;
@@ -1215,42 +1130,22 @@ Double_t GetNonEmptyMaximum(THStack* hs, Option_t *option)
 
    TString opt = option;
    opt.ToLower();
-   //Bool_t lerr = kFALSE;
-   //if (opt.Contains("e")) lerr = kTRUE;
    Double_t themax = -FLT_MAX;
    if (!hs->GetHists()) return 0;
    Int_t nhists = hs->GetHists()->GetSize();
    TH1 *h;
 
    if (!opt.Contains("nostack")) {
-      //BuildStack();
       gSystem->Warning("   utils::GetNonEmptyMaximum()", "stack option not supported. Use THStack class");
       h = (TH1*) hs->GetStack()->At(nhists-1);
-      //themax = h->GetMaximum();
       themax = GetNonEmptyMaximum(h);
    } else {
       for (Int_t i=0;i<nhists;i++) {
          h = (TH1*) hs->GetHists()->At(i);
-         //them = h->GetMaximum();
          Double_t them = GetNonEmptyMaximum(h);
-         //if (them <= 0 && gPad && gPad->GetLogy()) them = h->GetMaximum(0);
          if (them > themax) themax = them;
-         //printf("them, themax: %g, %g\n", them, themax);
       }
    }
-
-   //if (lerr) {
-   //   for (Int_t i=0;i<nhists;i++) {
-   //      h = (TH1*) hs->GetHists()->At(i);
-   //      first = h->GetXaxis()->GetFirst();
-   //      last  = h->GetXaxis()->GetLast();
-   //      for (Int_t j=first; j<=last;j++) {
-   //          e1     = h->GetBinError(j);
-   //          c1     = h->GetBinContent(j);
-   //          themax = TMath::Max(themax,c1+e1);
-   //      }
-   //   }
-   //}
 
    return themax;
 }
@@ -1264,45 +1159,22 @@ Double_t GetNonEmptyMinimum(THStack* hs, Option_t *option)
 
    TString opt = option;
    opt.ToLower();
-   //Bool_t lerr = kFALSE;
-   //if (opt.Contains("e")) lerr = kTRUE;
    Double_t themin = FLT_MAX;
    if (!hs->GetHists()) return themin;
    Int_t nhists = hs->GetHists()->GetSize();
    TH1 *h;
 
    if (!opt.Contains("nostack")) {
-      //BuildStack();
       gSystem->Warning("   utils::GetNonEmptyMinimum()", "stack option not supported. Use THStack class");
       h = (TH1*) hs->GetStack()->At(nhists-1);
-      //themin = h->GetMinimum();
       themin = GetNonEmptyMinimum(h);
    } else {
       for (Int_t i=0;i<nhists;i++) {
          h = (TH1*) hs->GetHists()->At(i);
-         //them = h->GetMinimum();
          Double_t them = GetNonEmptyMinimum(h);
-         //if (them <= 0 && gPad && gPad->GetLogy()) them = h->GetMinimum(0);
-         //if (them <= 0 && gPad && gPad->GetLogy()) them = GetNonEmptyMinimum(h, 0);
          if (them < themin) themin = them;
-         //printf("them, themin: %g, %g\n", them, themin);
       }
    }
-
-   //Int_t first,last;
-   //
-   //if (lerr) {
-   //   for (Int_t i=0;i<nhists;i++) {
-   //      h = (TH1*) hs->GetHists()->At(i);
-   //      first = h->GetXaxis()->GetFirst();
-   //      last  = h->GetXaxis()->GetLast();
-   //      for (Int_t j=first; j<=last;j++) {
-   //          e1     = h->GetBinError(j);
-   //          c1     = h->GetBinContent(j);
-   //          themin = TMath::Min(themin,c1-e1);
-   //      }
-   //   }
-   //}
 
    return themin;
 }
@@ -1407,7 +1279,6 @@ TH1* Divide(TH1* h1, TH1* h2, Double_t r12, TH1* h)
             Double_t y2 = h2->GetBinContent(bin);
             Double_t e2 = h2->GetBinError(bin);
 
-            //if ( y1 == 0 || y2 == 0 || (y1==0 && e1<=0) || (y2<=0 && e2<=0) ) continue;
             if ( y1 == 0 || y2 == 0 ) continue;
 
             Double_t bc = y1/y2;
@@ -1578,7 +1449,6 @@ Double_t PackDecimal(ValErrPair ve)
 {
    Int_t integer = (Int_t) (ve.first  * 1e8);
    Int_t decimal = (Int_t) (ve.second * 1e8);
-   //Double_t decimal = ve.second;
 
    integer = integer >  999999999 ?  999999999 : integer;
    integer = integer < -999999999 ? -999999999 : integer;
@@ -1649,17 +1519,12 @@ TEllipse* GetErrorEllipse(const ValErrPair &p1, const ValErrPair &p2, Double_t c
    if (p1.e < 0 || p2.e < 0) return 0;
 
    Double_t theta = 0.5*TMath::ATan2(2*corr*p1.e*p2.e, p2.e*p2.e - p1.e*p1.e);
-   //printf("theta: %f\n", theta);
 
    Double_t x1 =  p1.e*corr;
    Double_t y1 = -p2.e;
 
    Double_t x2 = -p1.e;
    Double_t y2 =  p2.e*corr;
-
-   //Double_t numer  = x2*x2*y1*y1 - x1*x1*y2*y2;
-   //Double_t denom1 = y1*y1 - y2*y2;
-   //Double_t denom2 = x2*x2 - x1*x1;
 
    Double_t numer  = (x2*y1 - x1*y2) * ( (x2*y1 + x1*y2)*TMath::Cos(2*theta) + (y1*y2 - x1*x2)*TMath::Sin(2*theta));
 
@@ -1674,7 +1539,6 @@ TEllipse* GetErrorEllipse(const ValErrPair &p1, const ValErrPair &p2, Double_t c
    Double_t a = TMath::Sqrt(numer) / TMath::Sqrt(denom1);
    Double_t b = TMath::Sqrt(numer) / TMath::Sqrt(denom2);
 
-   //if  (a2 < 0 || b2 < 0) return 0;
 
    return new TEllipse(p1.v, p2.v, a, b, 0, 360, 180-180.*theta/TMath::Pi());
 }
@@ -1694,7 +1558,6 @@ void SetXAxisIntBinsLabels(TH1* h, Int_t xmin, Int_t xmax, Float_t tfx, Int_t ny
 
    h->SetBins(nDivs, xmin, xmax, 1, -0.5, +0.5);
 
-   //printf("xxx: %s, %d, %d, %d, %d\n", h->GetName(), xmin, xmax, nFillsPerDiv, nDivs);
 
    Int_t nSparse = 1;
 
@@ -1705,16 +1568,12 @@ void SetXAxisIntBinsLabels(TH1* h, Int_t xmin, Int_t xmax, Float_t tfx, Int_t ny
 
    for (int ib=1; ib<=xAxis->GetNbins(); ib++, xFill+=nFillsPerDiv )//, xmin+=nFillsPerDiv)
    {  
-      //if ( xmin % nSparse != 0 ) continue;
 
       stringstream ssBinLabel(" ");
 
-      //if ( ib-1 % roundUp == 0 )
-      //if ( (xmin + ib - 1) % nSparse == 0 )
       if ( xFill % nSparse == 0 )
       {
          ssBinLabel << xFill;
-         //xmin+=roundUp;
       }
 
       xAxis->SetBinLabel(ib, ssBinLabel.str().c_str());
@@ -1733,17 +1592,12 @@ void SetXYAxisIntBinsLabels(TH1* h, Int_t xmin, Int_t xmax, Int_t ymin, Int_t ym
    h->SetBins(nx, xmin-0.5, xmax+0.5, ny+1, ymin-0.5, ymax+0.5);
 
    Int_t nLabels = Int_t(nx*tfx); // tfx is tick frequency
-   //h->SetNdivisions(10);
    Int_t nSparse = nLabels < 5 ? 1 : 5*Int_t(nLabels/5);
 
    TAxis* xAxis = h->GetXaxis();
-   //xAxis->CenterLabels(kTRUE);
 
    for (int ib=1; ib<=xAxis->GetNbins(); ib++, xmin++)
    {  
-      //Float_t remain = ((ib-1) % 2);
-      //printf("ib, ib/, xmin: %d, %f, %f\n", ib, remain, xmin);
-      //if ( (ib-1) % nLabels != 0) continue;
       if ( xmin % nSparse != 0 ) continue;
 
       stringstream ssBinLabel("");
@@ -1753,8 +1607,6 @@ void SetXYAxisIntBinsLabels(TH1* h, Int_t xmin, Int_t xmax, Int_t ymin, Int_t ym
    }
 
    h->LabelsOption("v");
-   //xAxis->SetNdivisions(nx-1, kFALSE);
-   //xAxis->SetNdivisions(nLabels, kFALSE);
 }
 
 
